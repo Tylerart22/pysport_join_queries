@@ -1,0 +1,20 @@
+def connect_to_database():
+    try:
+        # Replace the placeholders with your actual MySQL credentials
+        connection = mysql.connector.connect(
+            host='your_mysql_host',
+            database='pysports',
+            user='your_mysql_user',
+            password='your_mysql_password'
+        )
+
+        if connection.is_connected():
+            print("Connected to the pysports database")
+            return connection
+        else:
+            print("Failed to connect to the pysports database")
+            return None
+
+    except Error as e:
+        print(f"Error: {e}")
+        return None
