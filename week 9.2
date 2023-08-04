@@ -1,20 +1,33 @@
-def connect_to_database():
-    try:
-        # Replace the placeholders with your actual MySQL credentials
-        connection = mysql.connector.connect(
-            host='your_mysql_host',
-            database='pysports',
-            user='your_mysql_user',
-            password='your_mysql_password'
-        )
+def execute_inner_join_query(connection):
+    if connection is None or not connection.is_connected():
+        print("Not connected to the database.")
+        return
 
-        if connection.is_connected():
-            print("Connected to the pysports database")
-            return connection
-        else:
-            print("Failed to connect to the pysports database")
-            return None
+    try:
+        cursor = connection.cursor()
+
+        # INNER JOIN query
+        query = "SELECT p.player_id, p.first_name, p.last_name, t.team_name FROM player p INNER JOIN team t ON p.team_id = t.team_id"
+
+        cursor.execute(query)
+
+        # Display the results
+        print("Player ID | First Name | Last Name | Team Name")
+        print("--------------------------------------------")
+        for (player_id, first_name, last_name, team_name) in cursor:
+            print(f"{player_id} | {first_name} | {last_name} | {team_name}")
+
+        cursor.close()
 
     except Error as e:
         print(f"Error: {e}")
-        return None
+
+    finally:
+        if connection.is_connected():
+            connection.close()
+            print("Disconnected from the database")
+
+
+if __name__ == "__main__":
+    connection = connect_to_database()
+    execute_inner_join_query(connection)
